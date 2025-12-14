@@ -32,33 +32,3 @@ class LLMClient:
         )
 
         return response.choices[0].message.content.strip()
-
-
-# import os
-# import asyncio
-# from openai import AsyncOpenAI
-
-# async def main():
-#     # Création du client OpenAI-compatible (vLLM / unmute)
-#     client = AsyncOpenAI(
-#         api_key=os.environ.get("LLM_API_KEY", "EMPTY"),
-#         base_url=os.environ["LLM_BASE_URL"] + "/v1",
-#     )
-
-#     # Appel LLM simple
-#     response = await client.chat.completions.create(
-#         model="mistralai/Mistral-Small-3.2-24B-Instruct-2506",
-#         messages=[
-#             {"role": "system", "content": "You are a helpful assistant."},
-#             {"role": "user", "content": "Explain FastAPI in one paragraph."},
-#         ],
-#         temperature=0.7,
-#         max_tokens=200,
-#     )
-
-#     print("LLM RESPONSE:")
-#     print(response.choices[0].message.content)
-
-
-# if __name__ == "__main__":
-#     asyncio.run(main())

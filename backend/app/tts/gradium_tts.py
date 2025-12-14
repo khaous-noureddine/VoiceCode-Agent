@@ -1,8 +1,11 @@
 """
 Gradium TTS helper.
 
-- Input: JSON payload (expects payload["text"])
-- Output: audio played live (no file)
+- Input: payload {"text": "..."}
+- Output: audio played live (no file saved)
+
+Designed to be blocking on purpose:
+STT must be muted while TTS is playing.
 """
 
 import os
@@ -20,6 +23,12 @@ class GradiumTTS:
         model_name: str = "default",
         voice_id: str = "YTpq7expH9539ERJ",
     ):
+        """
+        api_key: Gradium API key (or GRADIUM_API_KEY env var)
+        model_name: TTS model
+        voice_id: voice identifier
+        """
+
         self.client = gradium_client.GradiumClient(
             base_url=base_url,
             api_key=api_key or os.getenv("GRADIUM_API_KEY"),
@@ -34,16 +43,30 @@ class GradiumTTS:
     # =====================
     # MAIN ENTRY POINT
     # =====================
-    async def run(self, payload):
+    async def run(self, payload: dict):
+        """
+        payload must contain:
+        {
+            "text": "string"
+        }
+        """
+
+        text = payload.get("text", "").strip()
+        if not text:
+            return
+
+        # ---- Call Gradium TTS ----
         result = await self.client.tts(
             setup=self.setup,
-            text=payload["text"],
+            text=text,
         )
 
+        # ---- Decode WAV from memory ----
         audio, sr = sf.read(
             io.BytesIO(result.raw_data),
             dtype="float32",
         )
 
+        # ---- Play audio (blocking) ----
         sd.play(audio, sr)
-        sd.wait()
+        sd.wait()  # blocking ON PURPOSE

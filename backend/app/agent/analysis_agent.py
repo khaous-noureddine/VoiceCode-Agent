@@ -39,6 +39,13 @@ FORMAT OBLIGATOIRE (AUCUN TEXTE EN DEHORS) :
   "reply": "string"
 }
 
+
+INTERDICTIONS ABSOLUES :
+- NE JAMAIS utiliser ```json ou ```
+- NE JAMAIS utiliser Markdown
+- NE JAMAIS ajouter de texte avant ou après le JSON
+
+
 """
 
 import json
