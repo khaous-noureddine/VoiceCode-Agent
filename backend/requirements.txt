@@ -1,0 +1,10 @@
+gradium
+sphn
+# fastapi[all]
+sounddevice 
+numpy 
+python-dotenv
+openai
+google-generativeai
+mistralai
+openai
