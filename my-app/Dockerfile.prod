@@ -1,0 +1,35 @@
+FROM python:3.11-slim
+
+# Installer Node.js
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Configurer git (requis par aider)
+RUN git config --global user.email "ai@hackathon.dev" && \
+    git config --global user.name "AI Agent" && \
+    git config --global init.defaultBranch main
+
+COPY main.py .
+COPY test.py .
+
+# Créer l'app Next.js dans /workspace
+RUN mkdir -p /workspace && \
+    cd /workspace && \
+    npx create-next-app@latest nextjs-app \
+    --typescript --tailwind --app --yes
+
+# Vérifier que l'app existe
+RUN ls -la /workspace/nextjs-app
+
+EXPOSE 8000 3000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

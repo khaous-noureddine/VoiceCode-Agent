@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context: "./my-app"
+      dockerfile: "Dockerfile.prod"
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    environment:
+          - GEMINI_API_KEY=${GEMINI_API_KEY}
+          - LLM_BASE_URL=${LLM_BASE_URL}
+          - LLM_API_KEY=${LLM_API_KEY}
